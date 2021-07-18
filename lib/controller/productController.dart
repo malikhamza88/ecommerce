@@ -32,6 +32,12 @@ class ProductController extends GetxController {
           productDescription: 'some description about product',
           productImage: 'abd',
           productName: 'ThirdProd'),
+      Product(
+          id: 4,
+          price: 29.5,
+          productDescription: 'some description about product',
+          productImage: 'abd',
+          productName: 'Apple M1 Macbook Pro'),
     ];
 
     products.value = productResult;
