@@ -1,103 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:learning_getx/controller/cart_controller.dart';
-import 'package:learning_getx/controller/count_controller.dart';
-import 'package:learning_getx/controller/productController.dart';
+import 'package:learning_getx/controller/product_controller.dart';
+import 'package:learning_getx/pages/product_tile.dart';
 
 class HomePage extends StatelessWidget {
-  final CountController c = Get.put(CountController());
-  final CartController cartController = Get.put(CartController());
-  final ProductController controller = Get.put(ProductController());
-
   @override
   Widget build(context) {
+    final ProductController _productController = Get.put(ProductController());
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text("Clicks: ${c.count}")),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: GetX<ProductController>(
-              builder: (ProductController controller) {
-                return ListView.builder(
-                  itemCount: controller.products.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      margin: const EdgeInsets.all(12),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${controller.products[index].productName}',
-                                      style: TextStyle(fontSize: 24),
-                                    ),
-                                    Text(
-                                        '${controller.products[index].productDescription}'),
-                                  ],
-                                ),
-                                Text('\$${controller.products[index].price}',
-                                    style: TextStyle(fontSize: 24)),
-                              ],
-                            ),
-                            RaisedButton(
-                              onPressed: () {
-                                cartController
-                                    .addToCart(controller.products[index]);
-                              },
-                              color: Colors.blue,
-                              textColor: Colors.white,
-                              child: Text('Add to Cart'),
-                            ),
-                            Obx(
-                              () => IconButton(
-                                icon: controller
-                                        .products[index].isFavorite.value
-                                    ? Icon(Icons.check_box_rounded)
-                                    : Icon(
-                                        Icons.check_box_outline_blank_outlined),
-                                onPressed: () {
-                                  controller.products[index].isFavorite
-                                      .toggle();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Colors.black,
             ),
-          ),
-          Obx(() => Text(
-                'Total amount: \$ ${cartController.totalPrice}',
-                style: TextStyle(fontSize: 32, color: Colors.black),
-              )),
-          SizedBox(
-            height: 100,
+            onPressed: () {},
           )
         ],
       ),
-      floatingActionButton:
-          FloatingActionButton(child: Icon(Icons.add), onPressed: c.increment),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'ShopX',
+                    style: TextStyle(
+                        fontFamily: 'avenir',
+                        fontSize: 32,
+                        fontWeight: FontWeight.w900),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.view_list_rounded),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.grid_view),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Obx(
+              () => StaggeredGridView.countBuilder(
+                crossAxisCount: 2,
+                itemCount: _productController.productList.length,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                itemBuilder: (context, index) {
+                  return ProductTile(_productController.productList[index]);
+                },
+                staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+              ),
+            ),
+          )
+        ],
+      ),
     );
-  }
-}
-
-class Other extends StatelessWidget {
-  final CountController c = Get.find();
-  @override
-  Widget build(context) {
-    return Scaffold(body: Center(child: Text("${c.count}")));
   }
 }
