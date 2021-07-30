@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:learning_getx/service/http_service.dart';
 
 const BASE_URL = "https://newsapi.org/";
@@ -9,10 +10,12 @@ class HttpServiceImplementation implements HttpService {
   late Dio _dio;
 
   @override
-  Future<Response> getRequest(String url) async {
+  Future<http.Response> getRequest(String url) async {
     try {
-      Response _response = await _dio.get(url);
-      return _response;
+      http.Response _data = await http.get(
+          Uri.parse('https://newsapi.org/$url'),
+          headers: {"Authorization": "Bearer $API_KEY"});
+      return _data;
     } on DioError catch (e) {
       debugPrint('HttpServiceImplementation.getRequest: ${e.message}');
       throw Exception(e.message);

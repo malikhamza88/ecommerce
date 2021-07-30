@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:learning_getx/core/repository/news_repository.dart';
@@ -19,8 +21,7 @@ class NewsRepoImplementation implements NewsRepo {
     try {
       final response =
           await _httpServices.getRequest('/v2/top-headlines?country=us');
-      final parsedData = NewsResponseModel.fromJson(response.data);
-
+      final parsedData = NewsResponseModel.fromJson(jsonDecode(response.body));
       return parsedData.articles!;
     } on Exception catch (e) {
       debugPrint(e.toString());
@@ -33,7 +34,7 @@ class NewsRepoImplementation implements NewsRepo {
     try {
       final response =
           await _httpServices.getRequest('/v2/everything?q=$query');
-      final parsedData = NewsResponseModel.fromJson(response.data);
+      final parsedData = NewsResponseModel.fromJson(jsonDecode(response.body));
 
       return parsedData.articles!;
     } on Exception catch (e) {

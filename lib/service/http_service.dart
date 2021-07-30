@@ -1,7 +1,7 @@
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 abstract class HttpService {
   void init();
 
-  Future<Response> getRequest(String url);
+  Future<http.Response> getRequest(String url);
 }

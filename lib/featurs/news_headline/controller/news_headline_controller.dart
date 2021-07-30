@@ -17,8 +17,9 @@ class NewsHeadlineController extends GetxController {
   }
 
   Future<void> _loadNews() async {
+    toggleLoading();
     final result = await _newsRepo.getNewsHeadline();
-    debugPrint('NewsHeadlineController._loadNews: ${result.length}');
+    toggleLoading();
     if (result.isNotEmpty) {
       articles.value = result;
     } else {
